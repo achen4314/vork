@@ -70,7 +70,7 @@ function loadData() {
   document.getElementById('error').style.display = 'none';
   document.getElementById('tableWrap').style.display = 'none';
 
-  fetch(API, {headers:{'Accept':'application/vnd.github+json'}})
+  fetch(API+'?_='+Date.now(), {headers:{'Accept':'application/vnd.github+json', 'Cache-Control':'no-cache'}})
   .then(function(r){
     if (!r.ok) throw new Error('HTTP '+r.status);
     return r.json();

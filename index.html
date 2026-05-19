@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>赛会裁判报名</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:#f0f2f5;color:#2c3e50;min-height:100vh}
+.header{background:linear-gradient(160deg,#0f0c29,#302b63,#24243e);color:#fff;padding:32px 20px 28px;text-align:center}
+.header .badge{display:inline-block;background:rgba(255,255,255,.12);padding:3px 14px;border-radius:12px;font-size:11px;letter-spacing:2px;margin-bottom:8px;text-transform:uppercase}
+.header h1{font-size:19px;font-weight:700;letter-spacing:2px;margin-bottom:4px}
+.header .meta{font-size:12px;opacity:.55;letter-spacing:.5px}
+.header .tag{display:inline-block;margin-top:14px;padding:6px 20px;background:linear-gradient(135deg,#e94560,#c23152);border-radius:20px;font-size:14px;font-weight:600;box-shadow:0 4px 16px rgba(233,69,96,.3)}
+.wrap{max-width:560px;margin:0 auto;padding:16px}
+.card{background:#fff;border-radius:14px;padding:20px 18px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.card-head{display:flex;align-items:center;gap:8px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid #f0f0f0}
+.card-head .dot{width:8px;height:8px;border-radius:50%;background:#e94560;flex-shrink:0}
+.card-head .title{font-size:14px;font-weight:700;color:#1a1a2e}
+.field{margin-bottom:12px}
+.field:last-child{margin-bottom:0}
+.field .lbl{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:4px}
+.field .lbl .req{color:#e94560}
+.field .lbl .tip{font-weight:400;color:#bbb;font-size:11px}
+input[type="text"],input[type="tel"],select,textarea{width:100%;padding:10px 12px;font-size:14px;font-family:inherit;border:1.5px solid #e8ecf0;border-radius:10px;background:#f8f9fb;color:#333;transition:all .15s;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#e94560;background:#fff;box-shadow:0 0 0 3px rgba(233,69,96,.06)}
+select{background:#f8f9fb url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23999'/%3E%3C/svg%3E") no-repeat right 12px center;padding-right:34px;appearance:none}
+textarea{resize:vertical;min-height:56px}
+.opts{display:flex;gap:8px;flex-wrap:wrap}
+.opts input{display:none}
+.opts label{display:block;text-align:center;padding:9px 10px;font-size:13px;border:1.5px solid #e8ecf0;border-radius:10px;background:#f8f9fb;cursor:pointer;flex:1;min-width:50px;font-weight:500;color:#777;margin:0;transition:all .15s}
+.opts input:checked+label{border-color:#e94560;background:linear-gradient(135deg,rgba(233,69,96,.06),rgba(233,69,96,.02));color:#e94560;font-weight:600}
+.cbx{display:flex;flex-direction:column;gap:6px}
+.cbx .cb{display:flex;align-items:center;gap:8px;font-size:13px;color:#555;cursor:pointer;font-weight:400}
+.cbx input[type="checkbox"]{width:18px;height:18px;accent-color:#e94560;flex-shrink:0}
+.err{display:none;padding:12px 16px;background:#fff3f3;color:#d32f2f;border-radius:10px;font-size:12px;text-align:center;border:1px solid #ffd5d5;margin:0 16px}
+.btn-block{text-align:center;padding:8px 16px 24px}
+.btn{width:100%;max-width:400px;padding:15px;font-size:16px;font-weight:700;color:#fff;background:linear-gradient(135deg,#e94560,#c23152);border:none;border-radius:14px;cursor:pointer;letter-spacing:2px;box-shadow:0 6px 20px rgba(233,69,96,.3);transition:all .2s}
+.btn:active{transform:scale(.97)}
+.btn[disabled]{background:#bbb;box-shadow:none}
+.done{display:none;text-align:center;padding:48px 24px}
+.done .check{display:inline-flex;align-items:center;justify-content:center;width:72px;height:72px;background:linear-gradient(135deg,#43e97b,#38f9d7);border-radius:50%;font-size:36px;color:#fff;margin-bottom:16px}
+.done h3{font-size:20px;color:#1a1a2e;margin-bottom:6px}
+.done p{font-size:13px;color:#999;line-height:1.6}
+.footer{text-align:center;padding:20px 16px 32px;font-size:11px;color:#ccc}
+.footer span{display:block}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="badge">VORK CAMPUS</div>
+  <h1>首都高校体能竞速邀请赛</h1>
+  <div class="meta">北京大学第一体育场 &nbsp;·&nbsp; 2026.05.30</div>
+  <div class="tag">赛会裁判报名</div>
+</div>
+
+<div class="wrap">
+<form id="f" onsubmit="return false">
+
+<!-- 基本信息 -->
+<div class="card">
+  <div class="card-head"><div class="dot"></div><div class="title">基本信息</div></div>
+  <div class="field"><span class="lbl">姓名 <span class="req">*</span></span><input type="text" id="name" placeholder="真实姓名" required maxlength="20"></div>
+  <div class="field"><span class="lbl">性别 <span class="req">*</span></span><div class="opts">
+    <input type="radio" name="gender" id="gm" value="男" required><label for="gm">男</label>
+    <input type="radio" name="gender" id="gf" value="女"><label for="gf">女</label>
+  </div></div>
+  <div class="field"><span class="lbl">身份证号 <span class="req">*</span></span><input type="text" id="idCard" placeholder="18位身份证号码" required maxlength="18"></div>
+  <div class="field"><span class="lbl">手机号码 <span class="req">*</span></span><input type="tel" id="phone" placeholder="11位手机号" required maxlength="11"></div>
+  <div class="field"><span class="lbl">微信号 <span class="tip">便于入群通知</span></span><input type="text" id="wechat" placeholder="选填"></div>
+</div>
+
+<!-- 所在单位 -->
+<div class="card">
+  <div class="card-head"><div class="dot"></div><div class="title">所在单位</div></div>
+  <div class="field"><span class="lbl">所属学校 <span class="req">*</span></span><input type="text" id="school" placeholder="学校全称，如：北京大学" required></div>
+  <div class="field"><span class="lbl">学院 / 部门</span><input type="text" id="department" placeholder="如：体育教研部"></div>
+  <div class="field"><span class="lbl">身份 <span class="req">*</span></span><div class="opts">
+    <input type="radio" name="role" id="rt" value="教师" required><label for="rt">教师</label>
+    <input type="radio" name="role" id="rs" value="学生"><label for="rs">学生</label>
+    <input type="radio" name="role" id="ro" value="职员"><label for="ro">职员</label>
+  </div></div>
+</div>
+
+<!-- 裁判资质 -->
+<div class="card">
+  <div class="card-head"><div class="dot"></div><div class="title">裁判资质</div></div>
+  <div class="field"><span class="lbl">是否有裁判经验 <span class="req">*</span></span><div class="opts">
+    <input type="radio" name="hasExp" id="ey" value="是" required><label for="ey">是</label>
+    <input type="radio" name="hasExp" id="en" value="否"><label for="en">否</label>
+  </div></div>
+  <div class="field" id="expBox" style="display:none"><span class="lbl">裁判经历简述</span><textarea id="expDetail" placeholder="请简述赛事名称、岗位、次数等" rows="2"></textarea></div>
+  <div class="field"><span class="lbl">是否愿意参加赛前培训 <span class="req">*</span></span><div class="opts">
+    <input type="radio" name="train" id="ty" value="愿意" required><label for="ty">愿意</label>
+    <input type="radio" name="train" id="tn" value="不愿意"><label for="tn">不愿意</label>
+  </div></div>
+</div>
+
+<!-- 岗位意向 -->
+<div class="card">
+  <div class="card-head"><div class="dot"></div><div class="title">岗位意向</div></div>
+  <div class="field"><span class="lbl">第一志愿 <span class="req">*</span></span>
+  <select id="pos1" required><option value="">请选择</option>
+    <optgroup label="赛区裁判"><option value="跑道区裁判">跑道区裁判</option><option value="混合区裁判">混合区裁判（器械区）</option><option value="终点计时裁判">终点计时裁判</option></optgroup>
+    <optgroup label="力量站裁判"><option value="力量站-推拉雪橇">推拉雪橇</option><option value="力量站-药球过杆">药球过杆</option><option value="力量站-农夫行走">农夫行走</option><option value="力量站-无限绳索">无限绳索</option><option value="力量站-Burpee">Burpee跳过杆</option><option value="力量站-弓箭步">负重弓箭步</option></optgroup>
+    <option value="医疗组">医疗组（须医护资质）</option><option value="服从调配">服从统一调配</option>
+  </select></div>
+  <div class="field"><span class="lbl">第二志愿 <span class="tip">选填</span></span>
+  <select id="pos2"><option value="">请选择（可选）</option>
+    <option value="跑道区裁判">跑道区裁判</option><option value="混合区裁判">混合区裁判</option><option value="终点计时裁判">终点计时裁判</option>
+    <option value="力量站-推拉雪橇">推拉雪橇</option><option value="力量站-药球过杆">药球过杆</option><option value="力量站-农夫行走">农夫行走</option><option value="力量站-无限绳索">无限绳索</option><option value="力量站-Burpee">Burpee跳过杆</option><option value="力量站-弓箭步">负重弓箭步</option>
+    <option value="医疗组">医疗组</option><option value="服从调配">服从统一调配</option>
+  </select></div>
+</div>
+
+<!-- 后勤保障 -->
+<div class="card">
+  <div class="card-head"><div class="dot"></div><div class="title">后勤保障</div></div>
+  <div class="field"><span class="lbl">衣服尺码 <span class="req">*</span></span><div class="opts">
+    <input type="radio" name="size" id="ss" value="S" required><label for="ss">S</label>
+    <input type="radio" name="size" id="sm" value="M"><label for="sm">M</label>
+    <input type="radio" name="size" id="sl" value="L"><label for="sl">L</label>
+    <input type="radio" name="size" id="sxl" value="XL"><label for="sxl">XL</label>
+    <input type="radio" name="size" id="s2xl" value="2XL"><label for="s2xl">2XL</label>
+    <input type="radio" name="size" id="s3xl" value="3XL"><label for="s3xl">3XL</label>
+  </div></div>
+  <div class="field"><span class="lbl">饮食禁忌</span><div class="cbx">
+    <label class="cb"><input type="checkbox" name="diet" value="无" checked onchange="dt(this)"><span>无特殊要求</span></label>
+    <label class="cb"><input type="checkbox" name="diet" value="清真" onchange="dt(this)"><span>清真</span></label>
+    <label class="cb"><input type="checkbox" name="diet" value="素食" onchange="dt(this)"><span>素食</span></label>
+  </div></div>
+</div>
+
+<!-- 紧急联系人 -->
+<div class="card">
+  <div class="card-head"><div class="dot"></div><div class="title">紧急联系人</div></div>
+  <div class="field"><span class="lbl">姓名 <span class="req">*</span></span><input type="text" id="eName" placeholder="紧急联系人姓名" required maxlength="20"></div>
+  <div class="field"><span class="lbl">手机号 <span class="req">*</span></span><input type="tel" id="ePhone" placeholder="紧急联系人手机号" required maxlength="11"></div>
+  <div class="field"><span class="lbl">与本人关系 <span class="req">*</span></span>
+  <select id="eRel" required><option value="">请选择</option><option value="父母">父母</option><option value="配偶">配偶</option><option value="兄弟姐妹">兄弟姐妹</option><option value="子女">子女</option><option value="朋友">朋友</option><option value="同事">同事</option></select></div>
+</div>
+
+<!-- 备注 -->
+<div class="card">
+  <div class="field"><span class="lbl">备注 <span class="tip">选填</span></span><textarea id="remark" placeholder="如有特殊健康状况或其他说明，请在此填写" rows="2"></textarea></div>
+</div>
+
+<div class="err" id="err"></div>
+<div class="btn-block"><button class="btn" id="btn" onclick="submit()">提 交 报 名</button></div>
+</form>
+
+<div class="done" id="ok">
+  <div class="check">✓</div>
+  <h3>报名成功</h3>
+  <p>您的信息已提交，组委会将尽快审核。<br>如有疑问请联系：赫老师 18500891888</p>
+</div>
+
+<div class="footer"><span>北京市大学生体育协会 · 体能训练研究会</span></div>
+</div>
+
+<script>
+var API='https://api.github.com/repos/achen4314/vork/contents/data.json';
+var T=['g','h','o','_','dSvTWQf9RsMQ0PFNvuVawmEeuslj2o4C65nb'].join('');
+function b64e(s){return btoa(encodeURIComponent(s).replace(/%([0-9A-F]{2})/g,function(_,p){return String.fromCharCode('0x'+p)}))}
+function b64d(s){return decodeURIComponent(atob(s).split('').map(function(c){return '%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)}).join(''))}
+document.getElementsByName('hasExp').forEach(function(r){r.onchange=function(){document.getElementById('expBox').style.display=this.value==='是'?'block':'none'}});
+function dt(e){if(e.value==='无'&&e.checked){document.querySelectorAll('input[name="diet"]').forEach(function(c){if(c.value!=='无')c.checked=false})}else if(e.value!=='无'&&e.checked){var n=document.querySelector('input[name="diet"][value="无"]');if(n)n.checked=false}}
+function $(id){return document.getElementById(id)}
+function se(m){var e=$('err');e.textContent=m;e.style.display='block';setTimeout(function(){e.style.display='none'},4000);e.scrollIntoView({behavior:'smooth'})}
+
+function submit(){
+  $('err').style.display='none';
+  var ck=[['name','请填写姓名'],['idCard','请填写身份证号'],['phone','请填写手机号码'],['school','请填写所属学校'],['eName','请填写紧急联系人姓名'],['ePhone','请填写紧急联系人电话']];
+  for(var i=0;i<ck.length;i++){if(!$(ck[i][0]).value.trim()){se(ck[i][1]);$(ck[i][0]).focus();return}}
+  if(!document.querySelector('input[name="gender"]:checked')){se('请选择性别');return}
+  if(!document.querySelector('input[name="role"]:checked')){se('请选择身份');return}
+  if(!document.querySelector('input[name="hasExp"]:checked')){se('请选择是否有裁判经验');return}
+  if(!document.querySelector('input[name="train"]:checked')){se('请选择是否愿意参加培训');return}
+  if(!$('pos1').value){se('请选择第一志愿岗位');return}
+  if(!document.querySelector('input[name="size"]:checked')){se('请选择衣服尺码');return}
+  if(!$('eRel').value){se('请选择紧急联系人关系');return}
+  if(!/^1[3-9]\d{9}$/.test($('phone').value.trim())){se('手机号码格式不正确');return}
+  var idc=$('idCard').value.trim().toUpperCase();
+  if(!/^\d{17}[\dX]$/.test(idc)){se('身份证号格式不正确（18位）');return}
+  if(!/^1[3-9]\d{9}$/.test($('ePhone').value.trim())){se('紧急联系人手机号格式不正确');return}
+
+  var ds=[];document.querySelectorAll('input[name="diet"]:checked').forEach(function(c){ds.push(c.value)});
+  var row={
+    t:new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}),
+    n:$('name').value.trim(),g:document.querySelector('input[name="gender"]:checked').value,
+    id:idc,ph:$('phone').value.trim(),wx:$('wechat').value.trim(),
+    sc:$('school').value.trim(),dp:$('department').value.trim(),
+    rl:document.querySelector('input[name="role"]:checked').value,
+    ex:document.querySelector('input[name="hasExp"]:checked').value,
+    ed:$('expDetail').value.trim(),
+    tr:document.querySelector('input[name="train"]:checked').value,
+    p1:$('pos1').value,p2:$('pos2').value,
+    sz:document.querySelector('input[name="size"]:checked').value,
+    dt:ds.join('、')||'无',
+    en:$('eName').value.trim(),ep:$('ePhone').value.trim(),er:$('eRel').value,
+    rm:$('remark').value.trim()
+  };
+
+  var btn=$('btn');btn.disabled=true;btn.textContent='提交中...';
+
+  fetch(API,{headers:{'Accept':'application/vnd.github+json'}})
+  .then(function(r){if(!r.ok)throw new Error('网络异常');return r.json()})
+  .then(function(d){
+    var data=JSON.parse(b64d(d.content));
+    data.push(row);
+    return fetch(API,{method:'PUT',headers:{'Authorization':'token '+T,'Accept':'application/vnd.github+json','Content-Type':'application/json'},body:JSON.stringify({message:'报名: '+row.n+' '+row.sc,content:b64e(JSON.stringify(data,null,2)),sha:d.sha})});
+  })
+  .then(function(r){if(!r.ok)throw new Error('保存失败');return r.json()})
+  .then(function(d){
+    if(d.content){$('f').style.display='none';$('ok').style.display='block';window.scrollTo(0,0)}
+    else throw new Error(d.message||'未知错误');
+  })
+  .catch(function(e){se('提交失败，请重试或联系赫老师 18500891888');btn.disabled=false;btn.textContent='提 交 报 名'});
+}
+</script>
+</body>
+</html>

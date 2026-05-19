@@ -204,7 +204,7 @@ function submit(){
 
   var btn=$('btn');btn.disabled=true;btn.textContent='提交中...';
 
-  fetch(API,{headers:{'Accept':'application/vnd.github+json'}})
+  fetch(API+'?_='+Date.now(),{headers:{'Accept':'application/vnd.github+json','Cache-Control':'no-cache'}})
   .then(function(r){if(!r.ok)throw new Error('网络异常');return r.json()})
   .then(function(d){
     var data=JSON.parse(b64d(d.content));

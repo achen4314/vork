@@ -49,8 +49,8 @@ tr:hover td{background:#fafafa}
 var ISSUES_API = 'https://api.github.com/repos/achen4314/vork/issues?state=all&labels=报名&per_page=100&_='+Date.now();
 var ALL_DATA = [];
 
-var HL = ['提交时间','姓名','性别','身份证号','手机号','微信号','学校','学院/部门','身份','裁判经验','裁判经历','培训','第一志愿','第二志愿','尺码','饮食','紧急联系人','紧急电话','关系','备注'];
-var HK = ['t','n','g','id','ph','wx','sc','dp','rl','ex','ed','tr','p1','p2','sz','dt','en','ep','er','rm'];
+var HL = ['提交时间','姓名','性别','身份证号','手机号','微信号','学校','学院/部门','身份','裁判经验','裁判经历','培训','第一志愿','第二志愿','紧急联系人','紧急电话','关系','备注'];
+var HK = ['t','n','g','id','ph','wx','sc','dp','rl','ex','ed','tr','p1','p2','en','ep','er','rm'];
 
 function parseIssue(body) {
   var row = {};
@@ -63,7 +63,7 @@ function parseIssue(body) {
   var map = {
     '提交时间':'t','姓名':'n','性别':'g','身份证号':'id','手机号':'ph','微信号':'wx',
     '学校':'sc','学院/部门':'dp','身份':'rl','裁判经验':'ex','裁判经历':'ed',
-    '参加培训':'tr','第一志愿':'p1','第二志愿':'p2','尺码':'sz','饮食':'dt',
+    '参加培训':'tr','第一志愿':'p1','第二志愿':'p2',
     '紧急联系人':'en','紧急电话':'ep','关系':'er','备注':'rm'
   };
   for (var i = 0; i < lines.length; i++) {
@@ -83,7 +83,7 @@ function loadData() {
   document.getElementById('error').style.display = 'none';
   document.getElementById('tableWrap').style.display = 'none';
 
-  fetch(ISSUES_API, {headers:{'Accept':'application/vnd.github+json','Cache-Control':'no-cache'}})
+  fetch(ISSUES_API, {headers:{'Accept':'application/vnd.github+json'}})
   .then(function(r){ if (!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
   .then(function(issues){
     ALL_DATA = [];

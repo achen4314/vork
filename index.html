@@ -95,18 +95,6 @@ textarea{resize:vertical;min-height:56px}
 <option value="力量站-推拉雪橇">推拉雪橇</option><option value="力量站-药球过杆">药球过杆</option><option value="力量站-农夫行走">农夫行走</option><option value="力量站-无限绳索">无限绳索</option><option value="力量站-Burpee">Burpee跳过杆</option><option value="力量站-弓箭步">负重弓箭步</option>
 <option value="医疗组">医疗组</option><option value="服从调配">服从统一调配</option></select></div></div>
 
-<div class="card"><div class="card-head"><div class="dot"></div><div class="title">后勤保障</div></div>
-<div class="field"><span class="lbl">衣服尺码 <span class="req">*</span></span><div class="opts">
-<input type="radio" name="size" id="ss" value="S" required><label for="ss">S</label>
-<input type="radio" name="size" id="sm" value="M"><label for="sm">M</label>
-<input type="radio" name="size" id="sl" value="L"><label for="sl">L</label>
-<input type="radio" name="size" id="sxl" value="XL"><label for="sxl">XL</label>
-<input type="radio" name="size" id="s2xl" value="2XL"><label for="s2xl">2XL</label>
-<input type="radio" name="size" id="s3xl" value="3XL"><label for="s3xl">3XL</label></div></div>
-<div class="field"><span class="lbl">饮食禁忌</span><div class="cbx">
-<label class="cb"><input type="checkbox" name="diet" value="无" checked onchange="dt(this)"><span>无特殊要求</span></label>
-<label class="cb"><input type="checkbox" name="diet" value="清真" onchange="dt(this)"><span>清真</span></label>
-<label class="cb"><input type="checkbox" name="diet" value="素食" onchange="dt(this)"><span>素食</span></label></div></div></div>
 
 <div class="card"><div class="card-head"><div class="dot"></div><div class="title">紧急联系人</div></div>
 <div class="field"><span class="lbl">姓名 <span class="req">*</span></span><input type="text" id="eName" placeholder="紧急联系人姓名" required maxlength="20"></div>
@@ -133,7 +121,6 @@ var T=['g','h','o','_','dSvTWQf9RsMQ0PFNvuVawmEeuslj2o4C65nb'].join('');
 var ISSUES_API='https://api.github.com/repos/achen4314/vork/issues';
 
 document.getElementsByName('hasExp').forEach(function(r){r.onchange=function(){document.getElementById('expBox').style.display=this.value==='是'?'block':'none'}});
-function dt(e){if(e.value==='无'&&e.checked){document.querySelectorAll('input[name="diet"]').forEach(function(c){if(c.value!=='无')c.checked=false})}else if(e.value!=='无'&&e.checked){var n=document.querySelector('input[name="diet"][value="无"]');if(n)n.checked=false}}
 function $(id){return document.getElementById(id)}
 function se(m){var e=$('err');e.textContent=m;e.style.display='block';setTimeout(function(){e.style.display='none'},4000);e.scrollIntoView({behavior:'smooth'})}
 
@@ -146,14 +133,12 @@ function submit(){
   if(!document.querySelector('input[name="hasExp"]:checked')){se('请选择是否有裁判经验');return}
   if(!document.querySelector('input[name="train"]:checked')){se('请选择是否愿意参加培训');return}
   if(!$('pos1').value){se('请选择第一志愿岗位');return}
-  if(!document.querySelector('input[name="size"]:checked')){se('请选择衣服尺码');return}
   if(!$('eRel').value){se('请选择紧急联系人关系');return}
   if(!/^1[3-9]\d{9}$/.test($('phone').value.trim())){se('手机号码格式不正确');return}
   var idc=$('idCard').value.trim().toUpperCase();
   if(!/^\d{17}[\dX]$/.test(idc)){se('身份证号格式不正确（18位）');return}
   if(!/^1[3-9]\d{9}$/.test($('ePhone').value.trim())){se('紧急联系人手机号格式不正确');return}
 
-  var ds=[];document.querySelectorAll('input[name="diet"]:checked').forEach(function(c){ds.push(c.value)});
   var row={
     t:new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai'}),
     n:$('name').value.trim(),g:document.querySelector('input[name="gender"]:checked').value,
@@ -164,8 +149,6 @@ function submit(){
     ed:$('expDetail').value.trim(),
     tr:document.querySelector('input[name="train"]:checked').value,
     p1:$('pos1').value,p2:$('pos2').value,
-    sz:document.querySelector('input[name="size"]:checked').value,
-    dt:ds.join('、')||'无',
     en:$('eName').value.trim(),ep:$('ePhone').value.trim(),er:$('eRel').value,
     rm:$('remark').value.trim()
   };
@@ -186,8 +169,6 @@ function submit(){
   body+='| 参加培训 | '+row.tr+' |\n';
   body+='| 第一志愿 | '+row.p1+' |\n';
   body+='| 第二志愿 | '+(row.p2||'-')+' |\n';
-  body+='| 尺码 | '+row.sz+' |\n';
-  body+='| 饮食 | '+row.dt+' |\n';
   body+='| 紧急联系人 | '+row.en+' |\n';
   body+='| 紧急电话 | '+row.ep+' |\n';
   body+='| 关系 | '+row.er+' |\n';

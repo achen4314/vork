@@ -46,23 +46,36 @@ tr:hover td{background:#fafafa}
 <div id="tableWrap" class="wrap" style="display:none"></div>
 
 <script>
-var API = 'https://api.github.com/repos/achen4314/vork/contents/data.json';
+var ISSUES_API = 'https://api.github.com/repos/achen4314/vork/issues?state=all&labels=报名&per_page=100&_='+Date.now();
 var ALL_DATA = [];
 
-// UTF-8 safe base64 decode
-function b64d(s) {
-  return decodeURIComponent(atob(s).split('').map(function(c){return '%'+('00'+c.charCodeAt(0).toString(16)).slice(-2)}).join(''));
-}
+var HL = ['提交时间','姓名','性别','身份证号','手机号','微信号','学校','学院/部门','身份','裁判经验','裁判经历','培训','第一志愿','第二志愿','尺码','饮食','紧急联系人','紧急电话','关系','备注'];
+var HK = ['t','n','g','id','ph','wx','sc','dp','rl','ex','ed','tr','p1','p2','sz','dt','en','ep','er','rm'];
 
-var FIELDS = [
-  {k:'t',l:'提交时间'},{k:'n',l:'姓名'},{k:'g',l:'性别'},
-  {k:'id',l:'身份证号'},{k:'ph',l:'手机号'},{k:'wx',l:'微信号'},
-  {k:'sc',l:'学校'},{k:'dp',l:'学院/部门'},{k:'rl',l:'身份'},
-  {k:'ex',l:'裁判经验'},{k:'ed',l:'裁判经历'},{k:'tr',l:'参加培训'},
-  {k:'p1',l:'第一志愿'},{k:'p2',l:'第二志愿'},{k:'sz',l:'尺码'},
-  {k:'dt',l:'饮食'},{k:'en',l:'紧急联系人'},{k:'ep',l:'紧急电话'},
-  {k:'er',l:'关系'},{k:'rm',l:'备注'}
-];
+function parseIssue(body) {
+  var row = {};
+  try {
+    var m = body.match(/```json\n([\s\S]*?)\n```/);
+    if (m) { var d = JSON.parse(m[1]); for (var k in d) row[k] = d[k]; return row; }
+  } catch(e) {}
+  // 回退：从表格解析
+  var lines = body.split('\n');
+  var map = {
+    '提交时间':'t','姓名':'n','性别':'g','身份证号':'id','手机号':'ph','微信号':'wx',
+    '学校':'sc','学院/部门':'dp','身份':'rl','裁判经验':'ex','裁判经历':'ed',
+    '参加培训':'tr','第一志愿':'p1','第二志愿':'p2','尺码':'sz','饮食':'dt',
+    '紧急联系人':'en','紧急电话':'ep','关系':'er','备注':'rm'
+  };
+  for (var i = 0; i < lines.length; i++) {
+    for (var label in map) {
+      if (lines[i].indexOf(label) > -1) {
+        var val = lines[i].split('|')[2];
+        if (val) row[map[label]] = val.trim();
+      }
+    }
+  }
+  return row;
+}
 
 function loadData() {
   document.getElementById('status').style.display = 'block';
@@ -70,14 +83,16 @@ function loadData() {
   document.getElementById('error').style.display = 'none';
   document.getElementById('tableWrap').style.display = 'none';
 
-  fetch(API+'?_='+Date.now(), {headers:{'Accept':'application/vnd.github+json', 'Cache-Control':'no-cache'}})
-  .then(function(r){
-    if (!r.ok) throw new Error('HTTP '+r.status);
-    return r.json();
-  })
-  .then(function(d){
-    ALL_DATA = JSON.parse(b64d(d.content));
-    if (!Array.isArray(ALL_DATA)) ALL_DATA = [];
+  fetch(ISSUES_API, {headers:{'Accept':'application/vnd.github+json','Cache-Control':'no-cache'}})
+  .then(function(r){ if (!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+  .then(function(issues){
+    ALL_DATA = [];
+    for (var i = 0; i < issues.length; i++) {
+      var row = parseIssue(issues[i].body);
+      if (row.n) ALL_DATA.push(row);
+    }
+    ALL_DATA.reverse();
+
     document.getElementById('status').style.display = 'none';
     document.getElementById('time').textContent = new Date().toLocaleString('zh-CN');
     document.getElementById('count').textContent = '共 '+ALL_DATA.length+' 条';
@@ -85,6 +100,8 @@ function loadData() {
     if (!ALL_DATA.length) {
       document.getElementById('status').textContent = '暂无报名数据';
       document.getElementById('status').style.display = 'block';
+      document.getElementById('total').textContent = '0';
+      document.getElementById('schools').textContent = '0';
       return;
     }
 
@@ -94,12 +111,11 @@ function loadData() {
     document.getElementById('schools').textContent = schools.size;
 
     var html = '<table><thead><tr><th>#</th>';
-    FIELDS.forEach(function(f){ html += '<th>'+f.l+'</th>'; });
+    for (var i = 0; i < HL.length; i++) html += '<th>'+HL[i]+'</th>';
     html += '</tr></thead><tbody>';
-
-    for (var i=0;i<ALL_DATA.length;i++) {
+    for (var i = 0; i < ALL_DATA.length; i++) {
       html += '<tr><td>'+(i+1)+'</td>';
-      FIELDS.forEach(function(f){ html += '<td>'+(ALL_DATA[i][f.k]||'')+'</td>'; });
+      for (var j = 0; j < HK.length; j++) html += '<td>'+(ALL_DATA[i][HK[j]]||'')+'</td>';
       html += '</tr>';
     }
     html += '</tbody></table>';
@@ -109,16 +125,15 @@ function loadData() {
   .catch(function(e){
     document.getElementById('status').style.display = 'none';
     document.getElementById('error').style.display = 'block';
-    document.getElementById('error').textContent = '加载失败：'+e.message;
+    document.getElementById('error').textContent = '加载失败：'+e.message+'。请刷新重试。';
   });
 }
 
 function exportCSV() {
   if (!ALL_DATA.length) return alert('无数据');
-  var h = FIELDS.map(function(f){return f.l}).join(',');
-  var csv = '\uFEFF'+h+'\n';
+  var csv = '\uFEFF'+HL.join(',')+'\n';
   ALL_DATA.forEach(function(r){
-    csv += FIELDS.map(function(f){return '"'+(r[f.k]||'').replace(/"/g,'""')+'"'}).join(',')+'\n';
+    csv += HK.map(function(k){return '"'+(r[k]||'').replace(/"/g,'""')+'"'}).join(',')+'\n';
   });
   var blob = new Blob([csv],{type:'text/csv;charset=utf-8'});
   var url = URL.createObjectURL(blob);
